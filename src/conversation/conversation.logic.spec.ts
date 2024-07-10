@@ -766,6 +766,41 @@ describe('ConversationLogic', () => {
     expect(updatedRecord).toEqual(mockConversation);
   });
 
+  it('should remove a tag for a conversation', async () => {
+    const tag1 = new Tag();
+    tag1.id = 'tag1';
+    tag1.type = TagType.subTopic;
+    const tag2 = new Tag();
+    tag2.id = 'tag2';
+    tag2.type = TagType.subTopic;
+    const tags = [tag1, tag2];
+    const mockConversation: ChatConversationModel = {
+      id: '321b1a570ff321b1a570ff01',
+      product: Product.community,
+      context: [],
+      memberIds: [],
+      permissions: [],
+      blockedMemberIds: [],
+      lastMessageId: new ObjectID(),
+      pinnedMessages: [new ObjectID()],
+      tags: tags,
+    };
+
+    const spy = jest
+    .spyOn(conversationData, 'updateTags')
+    .mockImplementationOnce(() => {
+      return Promise.resolve(mockConversation);
+    });
+
+    const updatedRecord = await service.deleteTags(
+      '321b1a570ff321b1a570ff01',
+      tag1,
+    ); 
+
+    expect(spy).toBeCalledWith('321b1a570ff321b1a570ff01', tag2);
+    expect(updatedRecord).toEqual(mockConversation);
+  });
+
   it('should create new direct conversation', async () => {
     const mockDirectConversation: ChatConversationModel = {
       id: '321b1a570ff321b1a570ff41',
