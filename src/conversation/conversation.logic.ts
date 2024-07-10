@@ -411,6 +411,21 @@ export class ConversationLogic implements IConversationLogic {
     }
   }
 
+  async deleteTags(
+    conversationId: string,
+    deletedTag: Tag[],
+  ): Promise<ConversationDTO> {
+    try {
+      const updatedRecord = await this.conversationData.deleteTags(
+        conversationId,
+        deletedTag,
+      );
+      return updatedRecord;
+    } catch (error) {
+      throw new HttpException('Conversation not found', HttpStatus.NOT_FOUND);
+    }
+  }
+
   private async sendPinMessageEvent(
     authenticatedUser: IAuthenticatedUser,
     conversationId: ObjectID,
